@@ -1,6 +1,5 @@
 FROM php:8.2-cli
 
-# Install dependencies
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
@@ -14,21 +13,16 @@ RUN apt-get update && apt-get install -y \
     openssl \
     && docker-php-ext-install pdo pdo_mysql mbstring zip bcmath
 
-# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working dir
 WORKDIR /var/www
 
-# Copy project files
 COPY . .
 
-# Install dependencies dan buat .env
 RUN composer install
+
+# Buat file .env agar tidak error saat dijalankan nanti
 RUN cp .env.example .env
 
-# Generate Laravel app key
-RUN php artisan key:generate
-
-# Jalankan Laravel
-CMD php artisan serve --host=0.0.0.0 --port=8000
+# Laravel akan dijalankan nanti saat container start, sekaligus generate key
+CMD php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000
