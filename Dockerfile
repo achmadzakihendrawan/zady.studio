@@ -26,3 +26,4 @@ RUN cp .env.example .env
 
 # Laravel akan dijalankan nanti saat container start, sekaligus generate key
 CMD php artisan key:generate && php artisan serve --host=0.0.0.0 --port=8000
+CMD php artisan migrate --force && php artisan serve --host=0.0.0.0 --port=8000
