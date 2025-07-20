@@ -9,6 +9,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CustomOrderController;
 use App\Http\Controllers\AdminCustomOrderController;
+use Illuminate\Support\Facades\Artisan;
+
 
 // Halaman Publik
 Route::get('/', [PageController::class, 'home']);
@@ -41,6 +43,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
     Route::resource('/produk', ProdukController::class);
     Route::get('/custom-orders', [AdminCustomOrderController::class, 'index'])->name('custom_orders');
+});
+Route::get('/', function () {
+    return [
+        'env_key' => env('APP_KEY'),
+        'config_key' => config('app.key')
+    ];
+})
+
+Route::get('/clear-config', function () {
+    Artisan::call('config:clear');
+    Artisan::call('cache:clear');
+    Artisan::call('config:cache');
+    return 'Config & cache cleared!';
 });
 
 require __DIR__.'/auth.php';
