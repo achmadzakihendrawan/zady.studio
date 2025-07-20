@@ -44,18 +44,19 @@ Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(fun
     Route::resource('/produk', ProdukController::class);
     Route::get('/custom-orders', [AdminCustomOrderController::class, 'index'])->name('custom_orders');
 });
-Route::get('/', function () {
-    return [
-        'env_key' => env('APP_KEY'),
-        'config_key' => config('app.key')
-    ];
-})
-
 Route::get('/clear-config', function () {
     Artisan::call('config:clear');
     Artisan::call('cache:clear');
     Artisan::call('config:cache');
     return 'Config & cache cleared!';
+});
+
+// Route opsional untuk cek apakah APP_KEY sudah terbaca
+Route::get('/check-key', function () {
+    return [
+        'env_key' => env('APP_KEY'),
+        'config_key' => config('app.key')
+    ];
 });
 
 require __DIR__.'/auth.php';
